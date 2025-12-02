@@ -11,5 +11,8 @@ namespace PickupExpressApp.Client.Models
         public decimal Price { get; set; }
 
         public int QuantityInStock { get; set; }
+
+        // Nav Property
+        public List<OrderItem>? OrderItems { get; set; }
     }
 }
