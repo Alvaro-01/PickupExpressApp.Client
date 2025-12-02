@@ -32,7 +32,7 @@
 }
 
 @code {
-    private LoginDto loginModel = new();
+    private LoginDto loginModel = new LoginDto();
     private string errorMessage;
 
     private async Task HandleLogin()
@@ -40,12 +40,13 @@
         try
         {
             // ✅ This is where you type the line
-            HttpResponseMessage? response = await Http.PostAsJsonAsync(requestUri: "api/user/login", loginModel);
+            var response = await Http.PostAsJsonAsync("api/user/login", loginModel);
+
 
             if (response.IsSuccessStatusCode)
             {
                 LoginResponse? result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-
+                Console.WriteLine($"Token: {result.Token}");
                 // Save token, set headers, notify auth provider, etc.
             }
             else
