@@ -13,49 +13,49 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = browser
 build_property.RootNamespace = PickupExpressApp.Client
 build_property.RootNamespace = PickupExpressApp.Client
-build_property.ProjectDir = C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\
+build_property.ProjectDir = C:\Users\mias2\OneDrive\Desktop\Sheridan\Semester 5\Enterprise Software Systems\Assignments\ESS\ClientSolution\PickupExpressApp.Client\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = false
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client
+build_property.MSBuildProjectDirectory = C:\Users\mias2\OneDrive\Desktop\Sheridan\Semester 5\Enterprise Software Systems\Assignments\ESS\ClientSolution\PickupExpressApp.Client
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/App.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Counter.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Home.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Login.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Weather.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Shared/RedirectToLogin.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Shared/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFJlZGlyZWN0VG9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/_Imports.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Layout/MainLayout.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-mnyjl0ymvb
 
-[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Layout/NavMenu.razor]
+[C:/Users/mias2/OneDrive/Desktop/Sheridan/Semester 5/Enterprise Software Systems/Assignments/ESS/ClientSolution/PickupExpressApp.Client/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-2t6lfkwkwi
