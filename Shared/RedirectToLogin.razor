@@ -1,8 +1,9 @@
-@inject NavigationManager Navigation
+@page "/"
+@inject NavigationManager Nav
 
 @code {
     protected override void OnInitialized()
     {
-        Navigation.NavigateTo(uri: "/login");
+        Nav.NavigateTo("/login", true);
     }
 }

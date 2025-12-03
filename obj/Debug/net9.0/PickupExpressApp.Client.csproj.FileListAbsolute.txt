@@ -1109,10 +1109,10 @@ C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.
 C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\refint\PickupExpressApp.Client.dll
 C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\PickupExpressApp.Client.pdb
 C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\ref\PickupExpressApp.Client.dll
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.u8zqetbb9r.wasm
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.nlqahdba32.pdb
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.u8zqetbb9r.wasm.gz
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.nlqahdba32.pdb.gz
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\f50hfr72sr-u8zqetbb9r.gz
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\32k6gm9cc8-nlqahdba32.gz
-C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\epml7j6v21-q5z2er81eg.gz
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.u84n95s9il.wasm
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.0ir3sk7vv8.pdb
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.u84n95s9il.wasm.gz
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\bin\Debug\net9.0\wwwroot\_framework\PickupExpressApp.Client.0ir3sk7vv8.pdb.gz
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\f50hfr72sr-u84n95s9il.gz
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\32k6gm9cc8-0ir3sk7vv8.gz
+C:\Users\alvar\OneDrive\Desktop\PROG3000\PickupExpressApp.Client\obj\Debug\net9.0\compressed\epml7j6v21-qo68lv0gak.gz
