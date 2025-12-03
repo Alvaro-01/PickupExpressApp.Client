@@ -32,12 +32,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/CustomerDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3VzdG9tZXJEYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/EmployeeDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1wbG95ZWVEYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/MainMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/alvar/OneDrive/Desktop/PROG3000/PickupExpressApp.Client/Pages/Weather.razor]

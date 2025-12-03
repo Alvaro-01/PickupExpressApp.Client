@@ -13,38 +13,37 @@ public class JwtAuthenticationStateProvider : AuthenticationStateProvider
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-    {
-        var token = await _localStorage.GetItemAsync<string>("authToken");
+{
+    var token = await _localStorage.GetItemAsync<string>("authToken");
 
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
-            return new AuthenticationState(anonymous);
-        }
+    if (string.IsNullOrWhiteSpace(token))
+        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
-        var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
+    var handler = new JwtSecurityTokenHandler();
+    var jwtToken = handler.ReadJwtToken(token);
 
-        var identity = new ClaimsIdentity(jwt.Claims, "jwt");
-        var user = new ClaimsPrincipal(identity);
+    var identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
+    var user = new ClaimsPrincipal(identity);
 
-        return new AuthenticationState(user);
-    }
+    return new AuthenticationState(user);
+}
 
     public void NotifyUserAuthentication(string token)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
+        var jwtToken = handler.ReadJwtToken(token);
 
-        var identity = new ClaimsIdentity(jwt.Claims, "jwt");
+        var identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
         var user = new ClaimsPrincipal(identity);
 
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        var authState = Task.FromResult(new AuthenticationState(user));
+        NotifyAuthenticationStateChanged(authState);
     }
 
     public void NotifyUserLogout()
     {
         var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(anonymous)));
+        var authState = Task.FromResult(new AuthenticationState(anonymous));
+        NotifyAuthenticationStateChanged(authState);
     }
 }

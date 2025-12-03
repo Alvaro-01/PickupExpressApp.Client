@@ -45,9 +45,18 @@
 
             if (response.IsSuccessStatusCode)
             {
-                LoginResponse? result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                Console.WriteLine($"Token: {result.Token}");
-                // Save token, set headers, notify auth provider, etc.
+                 var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+                // Save JWT in local storage
+                await LocalStorage.SetItemAsync("authToken", result!.Token);
+
+                // Notify Blazor auth state provider
+                ((JwtAuthenticationStateProvider)AuthProvider).NotifyUserAuthentication(result.Token);
+
+                // Redirect to main menu
+                Console.WriteLine("Login successful. Redirecting to main menu..."+ result.Username + " Role: " + result.Role);
+                Navigation.NavigateTo("/mainmenu");
+
             }
             else
             {
