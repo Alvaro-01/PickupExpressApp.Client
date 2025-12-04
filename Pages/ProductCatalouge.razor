@@ -1,0 +1,77 @@
+@page "/product-catalogue"
+@attribute [Authorize(Roles = "Customer")]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@inject IProductService ProductService
+
+<h3 class="mb-4">Available Products</h3>
+
+@if (isLoading)
+{
+    <p>Loading products...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (products.Count == 0)
+{
+    <p>No products are currently available.</p>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var product in products)
+        {
+            <div class="col">
+                <div class="card shadow-sm p-3">
+                    <h5 class="card-title">@product.Name</h5>
+
+                    <p class="card-text">
+                        <strong>Price:</strong> @product.Price.ToString("C")<br/>
+                        <strong>In Stock:</strong> @product.QuantityInStock
+                    </p>
+
+                    <button class="btn btn-primary w-100" @onclick="() => AddToCart(product)">
+                        Add to Order
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Product> products = new();
+    private bool isLoading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCatalogue();
+    }
+
+    private async Task LoadCatalogue()
+    {
+        try
+        {
+            isLoading = true;
+            products = await ProductService.GetAvailableProductsAsync();
+        }
+        catch (Exception ex)
+        {
+            error = "Failed to load products: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void AddToCart(Product product)
+    {
+        // for now cart/order system comoing after
+        Console.WriteLine($"Adding {product.Name} to order...");
+    }
+}

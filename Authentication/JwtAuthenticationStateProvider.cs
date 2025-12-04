@@ -13,28 +13,20 @@ public class JwtAuthenticationStateProvider : AuthenticationStateProvider
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-{
-    var token = await _localStorage.GetItemAsync<string>("authToken");
+    {
+        var token = await _localStorage.GetItemAsync<string>("authToken");
 
-    if (string.IsNullOrWhiteSpace(token))
-        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        if (string.IsNullOrWhiteSpace(token))
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
-    var handler = new JwtSecurityTokenHandler();
-    var jwtToken = handler.ReadJwtToken(token);
+        var user = BuildClaimsPrincipalFromToken(token);
 
-    var identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
-    var user = new ClaimsPrincipal(identity);
-
-    return new AuthenticationState(user);
-}
+        return new AuthenticationState(user);
+    }
 
     public void NotifyUserAuthentication(string token)
     {
-        var handler = new JwtSecurityTokenHandler();
-        var jwtToken = handler.ReadJwtToken(token);
-
-        var identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
-        var user = new ClaimsPrincipal(identity);
+        var user = BuildClaimsPrincipalFromToken(token);
 
         var authState = Task.FromResult(new AuthenticationState(user));
         NotifyAuthenticationStateChanged(authState);
@@ -45,5 +37,29 @@ public class JwtAuthenticationStateProvider : AuthenticationStateProvider
         var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
         var authState = Task.FromResult(new AuthenticationState(anonymous));
         NotifyAuthenticationStateChanged(authState);
+    }
+
+    private ClaimsPrincipal BuildClaimsPrincipalFromToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+
+        var claims = new List<Claim>();
+
+        foreach (var claim in jwtToken.Claims)
+        {
+            if (claim.Type == "role")
+            {
+                // ✔ MAP role → ClaimTypes.Role
+                claims.Add(new Claim(ClaimTypes.Role, claim.Value));
+            }
+            else
+            {
+                claims.Add(claim);
+            }
+        }
+
+        var identity = new ClaimsIdentity(claims, "jwt");
+        return new ClaimsPrincipal(identity);
     }
 }

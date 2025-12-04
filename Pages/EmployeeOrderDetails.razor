@@ -1,0 +1,9 @@
+@page "/manage-orders/{OrderId:int}"
+@using PickupExpressApp.Client.Models
+
+<h3>Order Details (#@OrderId)</h3>
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+}

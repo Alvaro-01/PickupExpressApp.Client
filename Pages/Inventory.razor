@@ -1,0 +1,72 @@
+@page "/inventory"
+@attribute [Authorize(Roles = "Employee")]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@inject IProductService ProductService
+
+<h3>Inventory Management</h3>
+
+@if (isLoading)
+{
+    <p>Loading inventory...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 50px;">ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th style="width: 100px;">Price</th>
+                <th style="width: 120px;">Quantity</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.QuantityInStock</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Product> products = new();
+    private bool isLoading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadInventory();
+    }
+
+    private async Task LoadInventory()
+    {
+        try
+        {
+            isLoading = true;
+            products = await ProductService.GetAllProductsAsync();
+        }
+        catch (Exception ex)
+        {
+            error = "Failed to load inventory: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
