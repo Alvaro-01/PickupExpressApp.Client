@@ -54,6 +54,26 @@ namespace PickupExpressApp.Client.Services
             }
         }
 
+        // GET api/order/user/{userId}
+        public async Task<List<Order>> GetOrdersByUserIdAsync(int userId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"api/order/user/{userId}");
+                response.EnsureSuccessStatusCode();
+
+                var content = await response.Content.ReadAsStringAsync();
+                var orders = JsonSerializer.Deserialize<List<Order>>(content,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return orders ?? new List<Order>();
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Could not load orders for user #{userId}.", e);
+            }
+        }
+
         // GET api/order/{id}
         public async Task<Order?> GetOrderByIdAsync(int id)
         {

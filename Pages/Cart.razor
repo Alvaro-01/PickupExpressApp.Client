@@ -1,6 +1,7 @@
 @page "/cart"
 @attribute [Authorize(Roles = "Customer")]
 
+@using PickupExpressApp.Client.DTOs
 @using PickupExpressApp.Client.Models
 @using PickupExpressApp.Client.Services
 @using System.Threading.Tasks
@@ -108,5 +109,45 @@ else
         // Get logged-in user
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+
+        var customerIdClaim = user.FindFirst("sub") ??
+                          user.FindFirst("userid") ??
+                          user.FindFirst("id");
+
+        if (customerIdClaim == null)
+        {
+            Console.WriteLine("User ID not found in claims.");
+            return;
+        }
+
+        int customerId = int.Parse(customerIdClaim.Value);
+
+        // Build order DTO
+        var orderDto = new OrderCreateDto
+        {
+            CustomerId = customerId,
+            OrderDate = DateTime.UtcNow,
+            OrderItems = cart.Select(entry => new OrderItemCreateDto
+            {
+                ProductId = entry.Key.ProductId,
+                Quantity = entry.Value
+            }).ToList()
+        };
+
+        try
+        {
+            // Send order to API
+            await OrderService.CreateOrderAsync(orderDto);
+
+            // Empty the cart
+            await CartService.ClearCartAsync();
+
+            // Reload cart view
+            await LoadCart();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Order creation failed: {e.Message}");
+        }
     }
 }

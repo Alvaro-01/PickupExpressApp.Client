@@ -7,6 +7,7 @@ namespace PickupExpressApp.Client.Services
     {
         Task<List<Order>> GetAllOrdersAsync();
         Task<List<Order>> GetOrdersByStatusAsync(OrderStatus status);
+        Task<List<Order>> GetOrdersByUserIdAsync(int userId);
         Task<Order?> GetOrderByIdAsync(int id);
 
         // Employee Operations

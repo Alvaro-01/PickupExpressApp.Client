@@ -53,6 +53,14 @@ else
                         </div>
                     }
                     @*If not, button remains as is*@
+                    else if (@product.QuantityInStock <= 0)
+                    {
+                        <div class="mb-3">
+                            <button class="btn btn-secondary w-100" disabled>
+                                Add to Order
+                            </button>
+                        </div>
+                    }
                     else
                     {
                         <div class="mb-3">
@@ -83,7 +91,7 @@ else
         try
         {
             isLoading = true;
-            products = await ProductService.GetAvailableProductsAsync();
+            products = await ProductService.GetAllProductsAsync();
         }
         catch (Exception e)
         {
