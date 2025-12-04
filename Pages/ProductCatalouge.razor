@@ -4,8 +4,16 @@
 @using PickupExpressApp.Client.Models
 @using PickupExpressApp.Client.Services
 @inject IProductService ProductService
+@inject CartService CartService
+@inject NavigationManager Navigation
 
 <h3 class="mb-4">Available Products</h3>
+
+<div class="mb-3">
+    <button class="btn btn-outline-secondary" @onclick="GoToCart">
+        Go to Cart
+    </button>
+</div>
 
 @if (isLoading)
 {
@@ -34,7 +42,25 @@ else
                         <strong>Description:</strong> @product.Description
                     </p>
 
-                    <button class="btn btn-primary w-100">Add to Order</button>
+                    @*If Item has been added to the cart in the past 1.5 seconds, give visual feedback*@
+                    @if (addedToCartTracker.ContainsKey(product) && addedToCartTracker[product])
+                    {
+                        
+                        <div class="mb-3">
+                            <button class="btn btn-success w-100" disabled>
+                                Added!
+                            </button>
+                        </div>
+                    }
+                    @*If not, button remains as is*@
+                    else
+                    {
+                        <div class="mb-3">
+                            <button class="btn btn-primary w-100" @onclick="() => AddToCart(product)">
+                                Add to Order
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
         }
@@ -45,6 +71,7 @@ else
     private List<Product> products = new();
     private bool isLoading = true;
     private string? error;
+    private Dictionary<Product, bool> addedToCartTracker = new Dictionary<Product, bool>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,5 +93,21 @@ else
         {
             isLoading = false;
         }
+    }
+
+    private async Task AddToCart(Product product)
+    {
+        await CartService.AddToCartAsync(product.ProductId);
+        addedToCartTracker[product] = true;
+        StateHasChanged();
+
+        await Task.Delay(1500);
+        addedToCartTracker[product] = false;
+        StateHasChanged();
+    }
+
+    private void GoToCart()
+    {
+        Navigation.NavigateTo("/cart");
     }
 }

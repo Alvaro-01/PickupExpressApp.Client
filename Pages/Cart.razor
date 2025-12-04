@@ -1,0 +1,112 @@
+@page "/cart"
+@attribute [Authorize(Roles = "Customer")]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@using System.Threading.Tasks
+@inject CartService CartService
+@inject IProductService ProductService
+@inject IOrderService OrderService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<h3 class="mb-4">Your Cart</h3>
+
+<button class="btn btn-primary" @onclick="GoToCatalogue">Back to Products</button>
+
+@if (isLoading)
+{
+    <p>Loading cart...</p>
+}
+else if (!cart.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in cart)
+            {
+                var product = entry.Key;
+                var quantity = entry.Value;
+
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@quantity</td>
+                    <td>@(product.Price * quantity)</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => RemoveItem(product.ProductId)">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Total: @cart.Sum(e => e.Key.Price * e.Value).ToString("C")</h4>
+
+    <button class="btn btn-success" @onclick="PlaceOrder">
+        Submit Order
+    </button>
+}
+
+@code {
+    private Dictionary<Product, int> cart = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCart();
+    }
+
+    private async Task LoadCart()
+    {
+        isLoading = true;
+
+        var storedCart = await CartService.GetCartAsync();
+
+        cart = new Dictionary<Product, int>();
+
+        foreach (var entry in storedCart)
+        {
+            var product = await ProductService.GetProductByIdAsync(entry.Key);
+            if (product != null)
+                cart[product] = entry.Value;
+        }
+
+        isLoading = false;
+    }
+
+    private async Task RemoveItem(int productId)
+    {
+        await CartService.RemoveAsync(productId);
+        await LoadCart();
+    }
+
+    private void GoToCatalogue()
+    {
+        Navigation.NavigateTo("/product-catalogue");
+    }
+
+    private async Task PlaceOrder()
+    {
+        if (cart.Count == 0)
+        {
+            return;
+        }
+
+        // Get logged-in user
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+    }
+}

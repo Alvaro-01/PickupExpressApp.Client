@@ -19,6 +19,7 @@ builder.Services.AddScoped(sp => new HttpClient
 // Register Services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<CartService>();
 
 // Local storage for JWT
 builder.Services.AddBlazoredLocalStorage();
