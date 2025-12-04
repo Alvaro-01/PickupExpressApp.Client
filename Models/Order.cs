@@ -5,6 +5,7 @@ namespace PickupExpressApp.Client.Models
         Pending,
         Processing,
         Completed,
+        PickedUp,
         Cancelled
     }
 

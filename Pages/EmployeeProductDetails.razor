@@ -1,0 +1,150 @@
+@page "/product/{ProductId:int}"
+@attribute [Authorize(Roles = "Employee")]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@using PickupExpressApp.Client.DTOs
+@inject IProductService ProductService
+@inject NavigationManager Navigation
+
+<h3 class="mb-3">Edit Product</h3>
+
+@if (isLoading)
+{
+    <p>Loading product...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (editModel == null)
+{
+    <p class="text-danger">Product not found.</p>
+}
+else
+{
+    <EditForm Model="@editModel" OnValidSubmit="SaveProduct">
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <InputText class="form-control" @bind-Value="editModel.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price</label>
+            <InputNumber class="form-control" @bind-Value="editModel.Price" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <InputTextArea class="form-control" @bind-Value="editModel.Description" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Quantity In Stock</label>
+            <InputNumber class="form-control" @bind-Value="editModel.QuantityInStock" />
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+                <button class="btn btn-secondary" type="button" @onclick="GoBack">Cancel</button>
+            </div>
+
+            <button class="btn btn-danger" type="button" @onclick="DeleteProduct">Delete Product</button>
+        </div>
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success mt-3">@successMessage</div>
+        }
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int ProductId { get; set; }
+
+    private Product? loadedProduct;
+    private ProductUpdateDto? editModel;
+    private bool isLoading = true;
+    private string? error;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProduct();
+    }
+
+    private async Task LoadProduct()
+    {
+        try
+        {
+            isLoading = true;
+
+            loadedProduct = await ProductService.GetProductByIdAsync(ProductId);
+
+            if (loadedProduct != null)
+            {
+                // Map Product to ProductUpdateDto
+                editModel = new ProductUpdateDto
+                {
+                    ProductId = loadedProduct.ProductId,
+                    Name = loadedProduct.Name ?? string.Empty,
+                    Price = loadedProduct.Price,
+                    Description = loadedProduct.Description ?? string.Empty,
+                    QuantityInStock = loadedProduct.QuantityInStock
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            error = "Failed to load product: " + ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SaveProduct()
+    {
+        try
+        {
+            if (editModel != null)
+            {
+                var updatedProduct = await ProductService.UpdateProductAsync(editModel);
+
+                if (updatedProduct != null)
+                {
+                    successMessage = "Product updated successfully!";
+                    loadedProduct = updatedProduct;
+                }
+                else
+                {
+                    error = "Failed to update product.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            error = "Failed to save changes: " + ex.Message;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/inventory");
+    }
+
+    private async Task DeleteProduct()
+    {
+        try
+        {
+            await ProductService.DeleteProductAsync(ProductId);
+            Navigation.NavigateTo("/inventory");
+        }
+        catch (Exception ex)
+        {
+            error = "Failed to delete product: " + ex.Message;
+        }
+    }
+}

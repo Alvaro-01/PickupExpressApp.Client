@@ -1,1 +1,149 @@
 @page "/manage-orders"
+@attribute [Authorize(Roles = "Employee")]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@inject IOrderService OrderService
+
+<h3 class="d-flex justify-content-between align-items-center">
+    Order Management
+</h3>
+
+<div class="mb-3">
+    <label class="form-label fw-bold">Filter by Status</label>
+    <select class="form-select" @onchange="OnStatusChanged">
+        <option value="Pending">Pending</option>
+        <option value="Processing">Processing</option>
+        <option value="Completed">Completed</option>
+        <option value="PickedUp">PickedUp</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+</div>
+
+@if (isLoading)
+{
+    <p>Loading orders...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (orders.Count == 0)
+{
+    <p>No @selectedStatus orders found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="width: 180px;">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.Customer?.Username</td>
+                    <td>@order.OrderDate.ToString("g")</td>
+                    <td>@order.Status</td>
+                    <td>
+                        @RenderActionButton(order)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Order> orders = new();
+    private OrderStatus selectedStatus = OrderStatus.Pending;
+    private bool isLoading = true;
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOrders();
+    }
+
+    private async Task LoadOrders()
+    {
+        try
+        {
+            isLoading = true;
+            error = null;
+
+            orders = await OrderService.GetOrdersByStatusAsync(selectedStatus);
+        }
+        catch (Exception ex)
+        {
+            error = $"Failed to load {selectedStatus} orders: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task OnStatusChanged(ChangeEventArgs args)
+    {
+        Enum.TryParse<OrderStatus>(args?.Value?.ToString(), out selectedStatus);
+        await LoadOrders();
+    }
+
+    private RenderFragment RenderActionButton(Order order) => builder =>
+    {
+        int seq = 0;
+
+        switch (order.Status)
+        {
+            case OrderStatus.Pending:
+                builder.OpenElement(seq++, "button");
+                builder.AddAttribute(seq++, "class", "btn btn-primary btn-sm");
+                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.Processing)));
+                builder.AddContent(seq++, "Start Processing");
+                builder.CloseElement();
+                break;
+
+            case OrderStatus.Processing:
+                builder.OpenElement(seq++, "button");
+                builder.AddAttribute(seq++, "class", "btn btn-success btn-sm");
+                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.Completed)));
+                builder.AddContent(seq++, "Mark Completed");
+                builder.CloseElement();
+                break;
+
+            case OrderStatus.Completed:
+                builder.OpenElement(seq++, "button");
+                builder.AddAttribute(seq++, "class", "btn btn-warning btn-sm");
+                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.PickedUp)));
+                builder.AddContent(seq++, "Mark Picked Up");
+                builder.CloseElement();
+                break;
+
+            default:
+                builder.AddContent(seq++, "—");
+                break;
+        }
+    };
+
+    private async Task UpdateStatus(int orderId, OrderStatus newStatus)
+    {
+        try
+        {
+            await OrderService.UpdateOrderStatusAsync(orderId, newStatus);
+            await LoadOrders(); // Refresh list
+        }
+        catch (Exception ex)
+        {
+            error = $"Could not update order #{orderId}: {ex.Message}";
+        }
+    }
+}

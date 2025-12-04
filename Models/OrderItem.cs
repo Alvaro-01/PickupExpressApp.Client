@@ -11,7 +11,7 @@ namespace PickupExpressApp.Client.Models
         public int Quantity { get; set; }
 
         // Nav Props
-        public required Order Order { get; set; }
-        public required Product Product { get; set; }
+        public Order? Order { get; set; }
+        public Product? Product { get; set; }
     }
 }

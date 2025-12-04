@@ -30,12 +30,11 @@ else
 
                     <p class="card-text">
                         <strong>Price:</strong> @product.Price.ToString("C")<br/>
-                        <strong>In Stock:</strong> @product.QuantityInStock
+                        <strong>In Stock:</strong> @product.QuantityInStock<br/>
+                        <strong>Description:</strong> @product.Description
                     </p>
 
-                    <button class="btn btn-primary w-100" @onclick="() => AddToCart(product)">
-                        Add to Order
-                    </button>
+                    <button class="btn btn-primary w-100">Add to Order</button>
                 </div>
             </div>
         }
@@ -59,19 +58,13 @@ else
             isLoading = true;
             products = await ProductService.GetAvailableProductsAsync();
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            error = "Failed to load products: " + ex.Message;
+            error = "Failed to load products: " + e.Message;
         }
         finally
         {
             isLoading = false;
         }
-    }
-
-    private void AddToCart(Product product)
-    {
-        // for now cart/order system comoing after
-        Console.WriteLine($"Adding {product.Name} to order...");
     }
 }

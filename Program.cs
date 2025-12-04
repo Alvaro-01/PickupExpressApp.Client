@@ -16,8 +16,9 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri("http://localhost:5000/") // matches API HTTP profile
 });
 
-// Register ProductService
+// Register Services
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Local storage for JWT
 builder.Services.AddBlazoredLocalStorage();

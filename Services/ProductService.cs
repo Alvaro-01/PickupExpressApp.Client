@@ -133,6 +133,7 @@ namespace PickupExpressApp.Client.Services
             }
         }
 
+        // DELETE: api/product/{id}
         public async Task<bool> DeleteProductAsync(int id)
         {
             try
