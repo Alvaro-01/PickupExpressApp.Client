@@ -50,11 +50,16 @@
                 // Save JWT in local storage
                 await LocalStorage.SetItemAsync("authToken", result!.Token);
 
+                Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", result.Token);
+
+
+
                 // Notify Blazor auth state provider
                 ((JwtAuthenticationStateProvider)AuthProvider).NotifyUserAuthentication(result.Token);
 
                 // Redirect to main menu
-                Console.WriteLine("Login successful. Redirecting to main menu..."+ result.Username + " Role: " + result.Role);
+                //Console.WriteLine("Login successful. Redirecting to main menu..."+ result.Username + " Role: " + result.Role);
                 Navigation.NavigateTo("/mainmenu", forceLoad: true);
 
             }
