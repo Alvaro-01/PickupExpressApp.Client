@@ -126,6 +126,23 @@ namespace PickupExpressApp.Client.Services
                 throw new InvalidOperationException($"Could not update the status for order #{id}", e);
             }
         }
+
+        // PATCH: api/order/{id}/notes
+        public async Task<Order?> UpdateOrderNotesAsync(int id, string newNotes)
+        {
+            try
+            {
+                var dto = new OrderNotesUpdateDto { NewNotes = newNotes };
+
+                var response = await _httpClient.PatchAsJsonAsync($"api/order/{id}/notes", dto);
+
+                return await response.Content.ReadFromJsonAsync<Order>();
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Could not update the notes for order #{id}", e);
+            }
+        }
         
         // DELETE: api/order/{id}
         public async Task<bool> DeleteOrderAsync(int id)

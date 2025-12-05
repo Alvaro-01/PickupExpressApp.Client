@@ -36,13 +36,15 @@ else
             @foreach (var order in orders)
             {
                 <tr>
-                    <td>@order.OrderId</td>
+                    <a href="/order-details/@order.OrderId" class="fw-bold text-primary">
+                        <td>@order.OrderId</td>
+                    </a>
                     <td>@order.OrderDate.ToString("g")</td>
                     <td>
                         <span class="badge bg-secondary">@order.Status</span>
                     </td>
                     <td>
-                        @order.OrderItems?.Sum(i => i.Product.Price * i.Quantity).ToString("C")
+                        @order.OrderItems?.Sum(i => i.Product!.Price * i.Quantity).ToString("C")
                     </td>
                 </tr>
             }

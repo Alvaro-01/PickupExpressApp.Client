@@ -13,6 +13,7 @@ namespace PickupExpressApp.Client.Services
         // Employee Operations
         Task<Order?> CreateOrderAsync(OrderCreateDto dto);
         Task<Order?> UpdateOrderStatusAsync(int id, OrderStatus newStatus);
+        Task<Order?> UpdateOrderNotesAsync(int id, string newNotes);
         Task<bool> DeleteOrderAsync(int id);
     }
 }

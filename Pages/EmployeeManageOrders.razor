@@ -49,7 +49,9 @@ else
             @foreach (var order in orders)
             {
                 <tr>
-                    <td>@order.OrderId</td>
+                    <a href="/order-details/@order.OrderId" class="fw-bold text-primary">
+                        <td>@order.OrderId</td>
+                    </a>
                     <td>@order.Customer?.Username</td>
                     <td>@order.OrderDate.ToString("g")</td>
                     <td>@order.Status</td>

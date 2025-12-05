@@ -1,0 +1,178 @@
+@page "/order-details/{OrderId:int}"
+@attribute [Authorize]
+
+@using PickupExpressApp.Client.Models
+@using PickupExpressApp.Client.Services
+@inject IOrderService OrderService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<h3 class="mb-3">Order Details #@OrderId</h3>
+
+@if (isLoading)
+{
+    <p>Loading order...</p>
+}
+else if (!string.IsNullOrEmpty(error))
+{
+    <div class="alert alert-danger">@error</div>
+}
+else if (order == null)
+{
+    <p class="text-danger">Order not found.</p>
+}
+else
+{
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+
+            <h5>
+                Status:
+                <span class="badge bg-secondary">@order.Status</span>
+            </h5>
+
+            <p class="mb-1"><strong>Order Date:</strong> @order.OrderDate.ToString("g")</p>
+            <p class="mb-1"><strong>Customer:</strong> @order.Customer?.Username</p>
+            <p class="mb-1"><strong>Total:</strong> 
+                @order.OrderItems?.Sum(i => i.Product!.Price * i.Quantity).ToString("C")
+            </p>
+
+            <hr />
+
+            <h5>Items</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="width: 120px;">Price</th>
+                        <th style="width: 80px;">Qty</th>
+                        <th style="width: 120px;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in order.OrderItems ?? new List<OrderItem>())
+                    {
+                        <tr>
+                            <td>@item.Product!.Name</td>
+                            <td>@item.Product.Price.ToString("C")</td>
+                            <td>@item.Quantity</td>
+                            <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <hr />
+
+            <h5>Pickup Notes</h5>
+
+            @if (isEmployee)
+            {
+                <textarea class="form-control mb-2"
+                          rows="3"
+                          @bind="notes">
+                </textarea>
+
+                <button class="btn btn-primary" @onclick="SaveNotes">Save Notes</button>
+            }
+            else
+            {
+                <p>@(string.IsNullOrWhiteSpace(order.Notes)
+                    ? "No pickup notes available."
+                    : order.Notes)</p>
+            }
+
+            <hr />
+
+            <button class="btn btn-secondary" @onclick="GoBack">Back</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+
+    private Order? order;
+    private bool isLoading = true;
+    private string? error;
+    private int loggedInUserId = 0;
+    private bool isEmployee = false;
+
+    private string? notes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var idClaim = user.FindFirst("sub") ?? user.FindFirst("id") ?? user.FindFirst("UserId");
+        if (idClaim != null)
+            loggedInUserId = int.Parse(idClaim.Value);
+
+        isEmployee = user.IsInRole("Employee");
+
+        await LoadOrder();
+    }
+
+    private async Task LoadOrder()
+    {
+        try
+        {
+            isLoading = true;
+            error = null;
+
+            order = await OrderService.GetOrderByIdAsync(OrderId);
+
+            if (order == null)
+            {
+                error = "Order not found.";
+                return;
+            }
+
+            if (!isEmployee && order.CustomerId != loggedInUserId)
+            {
+                error = "You are not allowed to view this order.";
+                order = null;
+                return;
+            }
+
+            notes = order.Notes;
+        }
+        catch (Exception ex)
+        {
+            error = $"Error loading order: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SaveNotes()
+    {
+        try
+        {
+            if (order == null) return;
+
+            order.Notes = notes;
+
+            await OrderService.UpdateOrderNotesAsync(order.OrderId, notes ?? string.Empty);
+
+            // optionally reload
+            await LoadOrder();
+        }
+        catch (Exception ex)
+        {
+            error = $"Failed to save notes: {ex.Message}";
+        }
+    }
+
+    private void GoBack()
+    {
+        if (isEmployee)
+            Navigation.NavigateTo("/manage-orders");
+        else
+            Navigation.NavigateTo("/my-orders");
+    }
+}

@@ -43,7 +43,7 @@ else
                 <tr>
                     <td>@product.Name</td>
                     <td>@quantity</td>
-                    <td>@(product.Price * quantity)</td>
+                    <td>@((product.Price * quantity).ToString("C"))</td>
                     <td>
                         <button class="btn btn-danger btn-sm" @onclick="() => RemoveItem(product.ProductId)">
                             Remove
