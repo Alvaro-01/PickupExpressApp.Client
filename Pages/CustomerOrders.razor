@@ -3,6 +3,7 @@
 
 @using PickupExpressApp.Client.Models
 @using PickupExpressApp.Client.Services
+
 @inject IOrderService OrderService
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -18,7 +19,7 @@ else if (!string.IsNullOrEmpty(error))
 }
 else if (orders.Count == 0)
 {
-    <p>You have no orders yet.</p>
+    <p>You have no orders.</p>
 }
 else
 {
@@ -36,16 +37,10 @@ else
             @foreach (var order in orders)
             {
                 <tr>
-                    <a href="/order-details/@order.OrderId" class="fw-bold text-primary">
-                        <td>@order.OrderId</td>
-                    </a>
+                    <td><a href="/order-details/@order.OrderId" class="fw-bold text-primary">@order.OrderId</a></td>
                     <td>@order.OrderDate.ToString("g")</td>
-                    <td>
-                        <span class="badge bg-secondary">@order.Status</span>
-                    </td>
-                    <td>
-                        @order.OrderItems?.Sum(i => i.Product!.Price * i.Quantity).ToString("C")
-                    </td>
+                    <td><span class="badge bg-secondary">@order.Status</span></td>
+                    <td>@order.OrderItems?.Sum(i => i.Product!.Price * i.Quantity).ToString("C")</td>
                 </tr>
             }
         </tbody>

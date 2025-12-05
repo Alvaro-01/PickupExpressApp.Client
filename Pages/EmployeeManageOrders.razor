@@ -56,8 +56,33 @@ else
                     <td>@order.OrderDate.ToString("g")</td>
                     <td>@order.Status</td>
                     <td>
-                        @RenderActionButton(order)
+                        @if (order.Status == OrderStatus.Pending)
+                        {
+                            <button class="btn btn-primary btn-sm"
+                                    @onclick="() => UpdateStatus(order.OrderId, OrderStatus.Processing)">
+                                Start Processing
+                            </button>
+                        }
+                        else if (order.Status == OrderStatus.Processing)
+                        {
+                            <button class="btn btn-success btn-sm"
+                                    @onclick="() => UpdateStatus(order.OrderId, OrderStatus.Completed)">
+                                Mark Completed
+                            </button>
+                        }
+                        else if (order.Status == OrderStatus.Completed)
+                        {
+                            <button class="btn btn-warning btn-sm"
+                                    @onclick="() => UpdateStatus(order.OrderId, OrderStatus.PickedUp)">
+                                Mark Picked Up
+                            </button>
+                        }
+                        else
+                        {
+                            <span>—</span>
+                        }
                     </td>
+
                 </tr>
             }
         </tbody>
@@ -99,42 +124,6 @@ else
         Enum.TryParse<OrderStatus>(args?.Value?.ToString(), out selectedStatus);
         await LoadOrders();
     }
-
-    private RenderFragment RenderActionButton(Order order) => builder =>
-    {
-        int seq = 0;
-
-        switch (order.Status)
-        {
-            case OrderStatus.Pending:
-                builder.OpenElement(seq++, "button");
-                builder.AddAttribute(seq++, "class", "btn btn-primary btn-sm");
-                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.Processing)));
-                builder.AddContent(seq++, "Start Processing");
-                builder.CloseElement();
-                break;
-
-            case OrderStatus.Processing:
-                builder.OpenElement(seq++, "button");
-                builder.AddAttribute(seq++, "class", "btn btn-success btn-sm");
-                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.Completed)));
-                builder.AddContent(seq++, "Mark Completed");
-                builder.CloseElement();
-                break;
-
-            case OrderStatus.Completed:
-                builder.OpenElement(seq++, "button");
-                builder.AddAttribute(seq++, "class", "btn btn-warning btn-sm");
-                builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => UpdateStatus(order.OrderId, OrderStatus.PickedUp)));
-                builder.AddContent(seq++, "Mark Picked Up");
-                builder.CloseElement();
-                break;
-
-            default:
-                builder.AddContent(seq++, "—");
-                break;
-        }
-    };
 
     private async Task UpdateStatus(int orderId, OrderStatus newStatus)
     {

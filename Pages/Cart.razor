@@ -4,7 +4,7 @@
 @using PickupExpressApp.Client.DTOs
 @using PickupExpressApp.Client.Models
 @using PickupExpressApp.Client.Services
-@using System.Threading.Tasks
+
 @inject CartService CartService
 @inject IProductService ProductService
 @inject IOrderService OrderService
@@ -19,7 +19,7 @@
 {
     <p>Loading cart...</p>
 }
-else if (!cart.Any())
+else if (cart.Count == 0)
 {
     <p>Your cart is empty.</p>
 }
@@ -54,6 +54,7 @@ else
         </tbody>
     </table>
 
+    @* Grabs item price and multiplies by amount of item in cart *@
     <h4>Total: @cart.Sum(e => e.Key.Price * e.Value).ToString("C")</h4>
 
     <button class="btn btn-success" @onclick="PlaceOrder">
@@ -75,14 +76,15 @@ else
         isLoading = true;
 
         var storedCart = await CartService.GetCartAsync();
-
-        cart = new Dictionary<Product, int>();
+        cart.Clear();
 
         foreach (var entry in storedCart)
         {
             var product = await ProductService.GetProductByIdAsync(entry.Key);
             if (product != null)
+            {
                 cart[product] = entry.Value;
+            }
         }
 
         isLoading = false;
@@ -99,50 +101,47 @@ else
         Navigation.NavigateTo("/product-catalogue");
     }
 
+    private async Task<int?> GetCustomerIdAsync()
+    {
+        var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = auth.User;
+
+        string[] claimTypes = { "sub", "userid", "id" };
+
+        var claim = claimTypes
+            .Select(type => user.FindFirst(type))
+            .FirstOrDefault(c => c != null);
+
+        return claim != null ? int.Parse(claim.Value) : null;
+    }
+
     private async Task PlaceOrder()
     {
         if (cart.Count == 0)
+            return;
+
+        var customerId = await GetCustomerIdAsync();
+        if (customerId == null)
         {
+            Console.WriteLine("Customer ID missing.");
             return;
         }
 
-        // Get logged-in user
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        var customerIdClaim = user.FindFirst("sub") ??
-                          user.FindFirst("userid") ??
-                          user.FindFirst("id");
-
-        if (customerIdClaim == null)
-        {
-            Console.WriteLine("User ID not found in claims.");
-            return;
-        }
-
-        int customerId = int.Parse(customerIdClaim.Value);
-
-        // Build order DTO
         var orderDto = new OrderCreateDto
         {
-            CustomerId = customerId,
+            CustomerId = customerId.Value,
             OrderDate = DateTime.UtcNow,
-            OrderItems = cart.Select(entry => new OrderItemCreateDto
+            OrderItems = cart.Select(e => new OrderItemCreateDto
             {
-                ProductId = entry.Key.ProductId,
-                Quantity = entry.Value
+                ProductId = e.Key.ProductId,
+                Quantity = e.Value
             }).ToList()
         };
 
         try
         {
-            // Send order to API
             await OrderService.CreateOrderAsync(orderDto);
-
-            // Empty the cart
             await CartService.ClearCartAsync();
-
-            // Reload cart view
             await LoadCart();
         }
         catch (Exception e)
