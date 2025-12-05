@@ -1,5 +1,27 @@
-<h4>Employee Options</h4>
-<ul>
-    <li><NavLink href="/manage-orders">Manage Orders</NavLink></li>
-    <li><NavLink href="/inventory">Inventory Management</NavLink></li>
-</ul>
+
+<h3>Employee Dashboard</h3>
+
+<div class="row">
+    <!-- Manage Orders -->
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Orders</h5>
+                <p class="card-text">View and update customer orders.</p>
+                <NavLink class="btn btn-primary" href="/manage-orders">Manage</NavLink>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory -->
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Inventory Management</h5>
+                <p class="card-text">Check and update stock levels.</p>
+                <NavLink class="btn btn-primary" href="/inventory">Manage Inventory</NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+

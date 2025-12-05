@@ -1,4 +1,18 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@attribute [Authorize]
+@inject IJSRuntime JS
+@inject JwtAuthenticationStateProvider AuthProvider
+@inject ILocalStorageService LocalStorage
+
+
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavManager
+@using System.Security.Claims
+@using Blazored.LocalStorage
+@using PickupExpressApp.Client.Models
+
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">PickupExpressApp.Client</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,21 +23,69 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
+       
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="" @onclick="Logout">
+                <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+
+        @if (user != null)
+        {
+            var role = GetUserRole(user!);
+
+            @if (role == UserRole.Employee)
+            {
+                <div class ="nav-item px-3">
+                    <NavLink class="nav-link" href="mainmenu">
+                        <span class="bi bi-house-door-fill " aria-hidden="true"></span> Employee Dashboard
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/manage-orders">
+                    <span class="bi bi-clipboard-check" aria-hidden="true"></span> Manage Orders
+                </NavLink>
+                </div>
+
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/inventory">
+                        <span class="bi bi-boxes" aria-hidden="true"></span> Inventory Management
+                    </NavLink>
+                </div>
+
+            }
+            else if (role == UserRole.Customer)
+            {
+
+                <div class ="nav-item px-3">
+                    <NavLink class="nav-link" href="mainmenu">
+                        <span class="bi bi-house-door-fill " aria-hidden="true"></span> Customer Dashboard
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/my-orders">
+                        <span class="bi bi-bag-check" aria-hidden="true"></span> My Orders
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/product-catalogue">
+                        <span class="bi bi-box-seam" aria-hidden="true"></span> Browse Product
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/support">
+                        <span class="bi bi-headset" aria-hidden="true"></span> Customer Support
+                    </NavLink>
+                </div>
+
+            }
+        }
         
     </nav>
 </div>
@@ -31,10 +93,51 @@
 @code {
     private bool collapseNavMenu = true;
 
+     private ClaimsPrincipal? user;
+
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        // Debug: dump all claims to console
+        foreach (var claim in user.Claims)
+        {
+            Console.WriteLine($"{claim.Type} = {claim.Value}");
+        }
+    }
+
+    private UserRole? GetUserRole(ClaimsPrincipal user)
+    {
+        string? roleClaim = user.FindFirst(ClaimTypes.Role)?.Value 
+                            ?? user.FindFirst("role")?.Value;
+
+        if (!string.IsNullOrWhiteSpace(roleClaim) &&
+            Enum.TryParse<UserRole>(roleClaim, ignoreCase: true, out UserRole role))
+        {
+            Console.WriteLine("Parsed UserRole: " + role);
+            return role;
+        }
+
+        Console.WriteLine("User role not found or invalid.");
+        return null;
+    }
+
+   @code {
+    private async Task Logout()
+    {
+        // Remove token from local storage
+        await LocalStorage.RemoveItemAsync("authToken");
+
+        // Redirect to login page
+        NavManager.NavigateTo("login", forceLoad: true);
+    }
+}
 }

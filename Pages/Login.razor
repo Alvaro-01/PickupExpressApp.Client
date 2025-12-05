@@ -55,7 +55,7 @@
 
                 // Redirect to main menu
                 Console.WriteLine("Login successful. Redirecting to main menu..."+ result.Username + " Role: " + result.Role);
-                Navigation.NavigateTo("/mainmenu");
+                Navigation.NavigateTo("/mainmenu", forceLoad: true);
 
             }
             else

@@ -1,6 +1,36 @@
-<h4>Customer Options</h4>
-<ul>
-    <li><NavLink href="/my-orders">My Orders</NavLink></li>
-    <li><NavLink href="/product-catalogue">Browse Product Catalogue</NavLink></li>
-    <li><NavLink href="/support">Customer Support</NavLink></li>
-</ul>
+<h3>Customer Dashboard</h3>
+
+<div class="row">
+    <!-- My Orders -->
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">My Orders</h5>
+                <p class="card-text">Track your recent and past orders.</p>
+                <NavLink class="btn btn-primary" href="/my-orders">View Orders</NavLink>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Catalogue -->
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Browse Products</h5>
+                <p class="card-text">Explore our full product catalogue.</p>
+                <NavLink class="btn btn-primary" href="/product-catalogue">Browse</NavLink>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support -->
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Customer Support</h5>
+                <p class="card-text">Need help? Contact support.</p>
+                <NavLink class="btn btn-primary" href="/support">Get Help</NavLink>
+            </div>
+        </div>
+    </div>
+</div>
