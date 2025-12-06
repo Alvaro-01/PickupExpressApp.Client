@@ -13,7 +13,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // HttpClient pointing to your API
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5000/") // matches API HTTP profile
+    BaseAddress = new Uri("https://pickupexpress-e8avdyhnapfcdyfc.canadacentral-01.azurewebsites.net/") // matches API HTTP profile
 });
 
 // Register Services
